@@ -1,8 +1,10 @@
 using CavityTools, JLD, Random
-#using ColorSchemes,Plots,LaTeXStrings #COMMENT FOR CLUSTER USAGE
 #include("dami_utilities.jl")
 
-function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int}, centers::Matrix{Float64}, T::Float64, Tmeas::Float64, dA::Float64, dB::Float64,dEA::Float64,dEB::Float64,kAc::Float64, kBc::Float64, kAa::Float64,kAd::Float64,kBa::Float64,kBd::Float64, KMM::Float64,rho_0::Float64, seed::Int,Nsave::Int,fold_files::String)
+function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int}, centers::Matrix{Float64}, T::Float64, Tmeas::Float64, dA::Float64, dB::Float64,dEA::Float64,dEB::Float64,kAc::Float64, kBc::Float64, kAa::Float64,kAd::Float64,kBa::Float64,kBd::Float64, KMM::Float64,rho_0::Float64, seed::Int,Nsave::Int,fold_files::String; graphics=false)
+	if graphics
+		using ColorSchemes,Plots,LaTeXStrings 
+	end
 	ran_ng = Random.Xoshiro(seed)
 	#cfg_memb[i,1]=number of A moelcules in cell i
 	#cfg_memb[i,2]=number of B moelcules in cell i
@@ -97,8 +99,11 @@ function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int},
 			cnt_meas+=1
 			#this saves measures
 			save(fold_files*"measures.jld","phi",measures[1:cnt_meas,1],"binder_cumulant", measures[1:cnt_meas,2],"EA_cyto",measures[1:cnt_meas,3],"EB_cyto",measures[1:cnt_meas,4],"rho",measures[1:cnt_meas,5])
-			#COMMENT FOR CLUSTER USAGE
-			#display(scatter(centers[:,1],centers[:,2],clim=(-1,1),zcolor=(cfg_memb[:,2].-cfg_memb[:,1])./(cfg_memb[:,1].+cfg_memb[:,2]),color=:vik,title="T="*string(round(last_meas,digits=3)),markerstrokewidths=0.0,markershape=:hexagon,markersize=4.0,label=L"\varphi",aspect_ratio=:equal))
+			if graphics 
+				display(scatter(centers[:,1],centers[:,2],clim=(-1,1),zcolor=(cfg_memb[:,2].-cfg_memb[:,1])./(cfg_memb[:,1].+cfg_memb[:,2]),color=:vik,title="T="*string(round(last_meas,digits=3)),markerstrokewidths=0.0,markershape=:hexagon,markersize=4.0,label=L"\varphi",aspect_ratio=:equal))
+				#to plot rho
+				#scatter(collect(1:cnt_meas).*Tmeas,measures[1:cnt_meas,5])
+			end
 			#savefig(string(last_meas)*".png")
 			#lattice 100x100 -> markersize=1.9
 			#lattice 50x50 -> markersize=4.0
