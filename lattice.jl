@@ -43,11 +43,13 @@ function gen_hex_lattice(L)
 	Nc=L*L
 	nn=zeros(Int,Nc,6)
 	center_pos=zeros(Nc,2)
-	#write this function	
 	for x in 1:L, y in 1:L
 		nn[rc2ind(x,y),:]=[rc2ind(PBC(x+1),y),rc2ind(PBC(x-1),y),rc2ind(x,PBC(y+1)),rc2ind(x,PBC(y-1)),rc2ind(PBC(x-1),PBC(y+1)),rc2ind(PBC(x+1),PBC(y-1))]
-		center_pos[rc2ind(x,y),1]=(y-1)*0.5+(x-1)
+		center_pos[rc2ind(x,y),1]=(x-1)+(y%2)*0.5
 		center_pos[rc2ind(x,y),2]=(y-1)*sqrt(3)*0.5
+		#to have rhombus instead of square use following
+		#center_pos[rc2ind(x,y),1]=(y-1)*0.5+(x-1)
+		#center_pos[rc2ind(x,y),2]=(y-1)*sqrt(3)*0.5
 	end
 	return nn,center_pos
 end
