@@ -1,0 +1,19 @@
+name = "RD"
+uuid = "b84b0a01-3127-49c3-bd25-e57a803e7c01"
+authors = ["Damiano Andreghetti, Alfredo Braunstein"]
+version = "1.0.0-DEV"
+
+[deps]
+ExponentialQueues = "8f3a112f-b142-4e59-ac86-373e9eb88260"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+
+[compat]
+ExponentialQueues = "1.0.1"
+ProgressMeter = "1.10.2"
+julia = "1.6.7"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
