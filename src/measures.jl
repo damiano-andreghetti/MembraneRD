@@ -17,7 +17,7 @@ function Measurer(M::Model; times)
     function take_measure(t, s)
         #calculate phi at each cell (normalized, goes from -1, to 1)
         ϕ(i) = (s.nB[i] - s.nA[i])/(s.nA[i] + s.nB[i] + 1e-10)
-        while t > times[next] 
+        while times[next] <= t 
             totA, totB = sum(s.nA), sum(s.nB)
             #measure phi
             ϕav = (totB - totA) / (totA + totB)
