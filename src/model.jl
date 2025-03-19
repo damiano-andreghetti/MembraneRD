@@ -1,6 +1,7 @@
-struct Model
-    neig::Matrix{Int}
-    centers::Matrix{Float64}
+struct Model{G}
+    g::G
+    posx::Vector{Float64}
+    posy::Vector{Float64}
     dA::Float64
     dB::Float64
     dEA::Float64
@@ -14,3 +15,6 @@ struct Model
     KMM::Float64
     rho_0::Float64
 end
+
+Base.length(M::Model) = nv(M.g)
+

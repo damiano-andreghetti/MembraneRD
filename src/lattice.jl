@@ -1,58 +1,9 @@
+using LinearAlgebra, SparseArrays, Graphs
 
-#very stupid way to generate square lattice, but still works
-function gen_square_lattice(L)
-	function rc2ind(x,y) #row and column to index
-		return Int((x-1)*L + y)
-	end
-	function PBC(x)
-		if x>L
-			return x-L
-		elseif x<1
-			return L+x
-		else
-			return x
-		end
-	end
-	Nc=L*L
-	nn=zeros(Int,Nc,4)
-	center_pos=zeros(Nc,2)
-	#write this function	
-	for x in 1:L, y in 1:L
-		nn[rc2ind(x,y),:]=[rc2ind(PBC(x+1),y),rc2ind(PBC(x-1),y),rc2ind(x,PBC(y+1)),rc2ind(x,PBC(y-1))]
-		center_pos[rc2ind(x,y),1]=x-1
-		center_pos[rc2ind(x,y),2]=y-1
-	end
-	return nn, center_pos
-end
-
-#to generate an hexagonal lattice we need to generate a triangular lattice
-#to generate a triangular lattice we simply generate a square lattice through the previous function and add diagonal edges
-function gen_hex_lattice(L)
-	function rc2ind(x,y) #row and column to index
-		return (x-1)*L + y
-	end
-	function PBC(x)
-		if x>L
-			return x-L
-		elseif x<1
-			return L+x
-		else
-			return x
-		end
-	end
-	Nc=L*L
-	nn=zeros(Int,Nc,6)
-	center_pos=zeros(Nc,2)
-	for x in 1:L, y in 1:L
-		nn[rc2ind(x,y),:]=[rc2ind(PBC(x+1),y),rc2ind(PBC(x-1),y),rc2ind(x,PBC(y+1)),rc2ind(x,PBC(y-1)),rc2ind(PBC(x-1),PBC(y+1)),rc2ind(PBC(x+1),PBC(y-1))]
-		center_pos[rc2ind(x,y),1]=(x-1)+(y%2)*0.5
-		center_pos[rc2ind(x,y),2]=(y-1)*sqrt(3)*0.5
-		#to have rhombus instead of square use following
-		#center_pos[rc2ind(x,y),1]=(y-1)*0.5+(x-1)
-		#center_pos[rc2ind(x,y),2]=(y-1)*sqrt(3)*0.5
-	end
-	return nn,center_pos
-end
-
-
-
+Open(n) = spdiagm(1=>trues(n-1))
+Closed(n) = spdiagm(1=>trues(n-1), -n+1 => trues(1))
+chain(n; boundary) = boundary(n) + boundary(n)'
+rect(L1, L2; boundary=Closed) = kron(chain(L1; boundary),I(L2)) + kron(I(L1), chain(L2; boundary))
+hexa(L1, L2; boundary=Closed) = rect(L1,L2; boundary) + kron(boundary(L1),boundary(L2)) + kron(boundary(L1)',boundary(L2)')
+gen_square_lattice(L) = SimpleGraph(rect(L, L)), mod1.(1:L^2, L), fld1.(1:L^2, L)
+gen_hex_lattice(L) = SimpleGraph(hexa(L, L)), mod1.(1:L^2, L) .- 0.5 .* fld1.(1:L^2, L), 1.0.*fld1.(1:L^2, L)

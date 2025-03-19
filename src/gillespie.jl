@@ -1,6 +1,3 @@
-using ExponentialQueues
-
-
 struct State{T}
 	nA::Vector{T}
 	nB::Vector{T}
@@ -11,14 +8,12 @@ struct State{T}
 end
 
 Base.length(s::State) = length(s.nEA)
-Base.length(M::Model) = size(M.neig, 1)
 
 function run_RD!(s::State, M::Model, T; 
         stats = (x...)->nothing, 
         rng = Random.default_rng())
 
-    n = length(M)
-    QA,QB,QEA,QEB,QcatA,QcatB = (StaticExponentialQueue(n) for _ in 1:6)
+    QA,QB,QEA,QEB,QcatA,QcatB = (StaticExponentialQueue(length(M)) for _ in 1:6)
     QattEA = QA * 1.0
     QattEB = QB * 1.0
 
@@ -36,7 +31,7 @@ function run_RD!(s::State, M::Model, T;
     foreach(update, 1:n)
 
     #arrival is chosen uniformly between its neighbours
-    rand_neighbor(i) = rand(rng, @view M.neig[i,:])
+    rand_neighbor(i) = rand(rng, neighbors(M.g, i))
 
     Q = NestedQueue(
             :difA => QA * M.dA,
