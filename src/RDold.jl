@@ -1,9 +1,9 @@
-using CavityTools, JLD, Random
+using ExponentialQueues, JLD, Random, Graphs
 #THE FOLLOWING IS TO MAKE PLOT, COMMENT FOR CLUSTER USAGE
 #using ColorSchemes,Plots,LaTeXStrings 
 
 
-function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int}, centers::Matrix{Float64}, T::Float64, Tmeas::Float64, dA::Float64, dB::Float64,dEA::Float64,dEB::Float64,kAc::Float64, kBc::Float64, kAa::Float64,kAd::Float64,kBa::Float64,kBd::Float64, KMM::Float64,rho_0::Float64, seed::Int,Nsave::Int,fold_files::String)
+function run_RD(cfg_memb, cfg_cyto::Vector{Int}, g::SimpleGraph, centers, T::Float64, Tmeas::Float64, dA::Float64, dB::Float64,dEA::Float64,dEB::Float64,kAc::Float64, kBc::Float64, kAa::Float64,kAd::Float64,kBa::Float64,kBd::Float64, KMM::Float64,rho_0::Float64, seed::Int,Nsave::Int,fold_files::String)
 	ran_ng = Random.Xoshiro(seed)
 	#cfg_memb[i,1]=number of A moelcules in cell i
 	#cfg_memb[i,2]=number of B moelcules in cell i
@@ -105,7 +105,7 @@ function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int},
 		if i==1
 			#diffusion of specie A
 			dep = peekevent(R_diffA, rng=ran_ng)
-			arr=rand(ran_ng,neig[dep,:]) #arrival is chosen uniformly between its neighbours
+			arr=rand(ran_ng,neighbors(g, dep)) #arrival is chosen uniformly between its neighbours
 			cfg_memb[dep,1]-=1
 			cfg_memb[arr,1]+=1
 			#update rates for diffusion of specie A, and for catalysis and for enzyme detachment (both  global and local)
@@ -119,7 +119,7 @@ function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int},
 		elseif i==2
 			#diffusion of specie B
 			dep = peekevent(R_diffB, rng=ran_ng)
-			arr=rand(ran_ng,neig[dep,:]) #arrival is chosen uniformly between its neighbours
+			arr=rand(ran_ng,neighbors(g, dep)) #arrival is chosen uniformly between its neighbours
 			cfg_memb[dep,2]-=1
 			cfg_memb[arr,2]+=1
 			#update rates for diffusion of specie B, and for catalysis and for enzyme detachment (both  global and local)
@@ -217,7 +217,7 @@ function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int},
 		elseif i==9
 			#diffusion of EA
 			dep = peekevent(R_detEA, rng=ran_ng)
-			arr=rand(ran_ng,neig[dep,:]) #arrival is chosen uniformly between its neighbours
+			arr=rand(ran_ng,neighbors(g, dep)) #arrival is chosen uniformly between its neighbours
 			cfg_memb[dep,3]-=1
 			cfg_memb[arr,3]+=1
 			#update rates for detachment of EA locally, and for catalysis and for enzyme diffusion (both  global and local)
@@ -231,7 +231,7 @@ function run_RD(cfg_memb::Matrix{Int}, cfg_cyto::Vector{Int}, neig::Matrix{Int},
 		elseif i==10
 			#diffusion of EB
 			dep = peekevent(R_detEB, rng=ran_ng)
-			arr=rand(ran_ng,neig[dep,:]) #arrival is chosen uniformly between its neighbours
+			arr=rand(ran_ng,neighbors(g, dep)) #arrival is chosen uniformly between its neighbours
 			cfg_memb[dep,4]-=1
 			cfg_memb[arr,4]+=1
 			#update rates for detachment of EA locally, and for catalysis and for enzyme diffusion (both  global and local)

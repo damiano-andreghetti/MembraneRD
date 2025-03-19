@@ -28,7 +28,7 @@ function run_RD!(s::State, M::Model, T;
         QattEB.f[] = s.cytoEB[] * M.kBa
     end
 
-    foreach(update, 1:n)
+    foreach(update, 1:length(M))
 
     #arrival is chosen uniformly between its neighbours
     rand_neighbor(i) = rand(rng, neighbors(M.g, i))
