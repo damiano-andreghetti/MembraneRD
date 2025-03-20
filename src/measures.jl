@@ -17,11 +17,11 @@ function Measurer(M::Model; times)
     function take_measure(t, s)
         #calculate phi at each cell (normalized, goes from -1, to 1)
         ϕ(i) = (s.nB[i] - s.nA[i])/(s.nA[i] + s.nB[i] + 1e-10)
-        while times[next] <= t 
+        while next <= lastindex(times) && times[next] <= t 
             totA, totB = sum(s.nA), sum(s.nB)
             #measure phi
             ϕav = (totB - totA) / (totA + totB)
-            println("T = $t and <ϕ>/c = $(ϕav)")
+            println("T = $(times[next]) and <ϕ>/c = $(ϕav)")
             #in some denominators I added + 10^-10 in order to avoid NaNs
             m2 = sum((ϕ(i)-ϕav)^2 for i in 1:Nc) / Nc
             m4 = sum((ϕ(i)-ϕav)^4 for i in 1:Nc) / Nc
@@ -38,7 +38,12 @@ end
 
 function ProgressMeasurer(T)
     p = Progress(100)
+    oldval = 0
     function stat(t, _)
-        update!(p, floor(Int, 100*t/T))
+        newval = floor(Int, 100*t/T)
+        if newval > oldval
+            update!(p, newval)
+            oldval = newval
+        end
     end
 end

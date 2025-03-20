@@ -41,7 +41,9 @@ function run_RD!(s::State, M::Model, T;
             :attEA => QattEA,
             :attEB => QattEB,
             :difEA => QEA * M.dEA,
-            :difEB => QEB * M.dEB
+            :difEB => QEB * M.dEB,
+            :detEA => QEA * M.kAd,
+            :detEB => QEB * M.kBd
         )
 
     println("starting simulation, $(length(Q)) events in the queue")
@@ -76,13 +78,13 @@ function run_RD!(s::State, M::Model, T;
             s.cytoEA[] -= 1
             s.nEA[i] += 1
             update(i)
-        elseif ev === :detEA #detachment of EA
-            s.nEA[i] -= 1
-            s.cytoEA[] += 1
-            update(i)
         elseif ev === :attEB #attachment of EB from cytosol
             s.cytoEB[] -= 1
             s.nEB[i] += 1
+            update(i)
+        elseif ev === :detEA #detachment of EA
+            s.nEA[i] -= 1
+            s.cytoEA[] += 1
             update(i)
         elseif ev === :detEB #detachment of EB
             s.nEB[i] -= 1
