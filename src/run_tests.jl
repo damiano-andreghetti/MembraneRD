@@ -1,7 +1,8 @@
 include("RD.jl")
 include("lattice.jl")
+
 #logarithmically ranged values
-function logrange(x1, x2, n)
+function _logrange(x1, x2, n)
 	return [10^y for y in range(log10(x1), log10(x2), length=n)]
 end
 
@@ -37,7 +38,7 @@ function run_script()
 	kAc_th=1.0
 	kBa_th=1.0
 	kBd_th=1.0*kBa_th
-	kBc_th=logrange(logrange(0.1,10,17)[4],logrange(0.1,10.0,17)[14],23)[13]*kAc_th
+	kBc_th=_logrange(_logrange(0.1,10,17)[4],_logrange(0.1,10.0,17)[14],23)[13]*kAc_th
 	KMM_th=1.0
 	#rates to implement
 	kAc=kAc_th
