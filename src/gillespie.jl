@@ -13,17 +13,17 @@ function run_RD!(s::State, M::Model, T;
         stats = (x...)->nothing, 
         rng = Random.default_rng())
 
-    QA,QB,QEA,QEB,QcatA,QcatB = (StaticExponentialQueue(length(M)) for _ in 1:6)
-    QattEA = QA * 1.0
-    QattEB = QB * 1.0
+    QA,QB,QEA,QEB,QcatA,QcatB = (ExponentialQueue(length(M)) for _ in 1:6)
+    QattEA = QA * 0.0
+    QattEB = QB * 0.0
 
     function update(i)
         QA[i] = s.nA[i]
         QB[i] = s.nB[i]
+        QcatB[i] = s.nEB[i] * s.nA[i] / (s.nA[i] + M.KMM)
+        QcatA[i] = s.nEA[i] * s.nB[i] / (s.nB[i] + M.KMM)
         QEA[i] = s.nEA[i]
         QEB[i] = s.nEB[i]
-        QcatA[i] = s.nEA[i] * s.nB[i] / (s.nB[i] + M.KMM)
-        QcatB[i] = s.nEB[i] * s.nA[i] / (s.nA[i] + M.KMM)
         QattEA.f[] = s.cytoEA[] * M.kAa
         QattEB.f[] = s.cytoEB[] * M.kBa
     end
