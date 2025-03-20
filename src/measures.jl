@@ -1,6 +1,7 @@
 using ProgressMeter
 
 struct Measure
+	time::Float64
     phi_av::Float64
     binder_cumulant::Float64
     cytoEA::Float64
@@ -17,21 +18,21 @@ function Measurer(M::Model; times, name, Nsave)
     function take_measure(t, s)
         #calculate phi at each cell (normalized, goes from -1, to 1)
         ϕ(i) = (s.nB[i] - s.nA[i])/(s.nA[i] + s.nB[i] + 1e-10)
-        while times[next] <= t && next <= lastindex(times) 
+        while next <= lastindex(times) && times[next] <= t
             totA, totB = sum(s.nA), sum(s.nB)
             #measure phi
             ϕav = (totB - totA) / (totA + totB)
-            println("T = $(times[next]) and <ϕ>/c = $(ϕav)")
             #in some denominators I added + 10^-10 in order to avoid NaNs
             m2 = sum((ϕ(i)-ϕav)^2 for i in 1:Nc) / Nc
             m4 = sum((ϕ(i)-ϕav)^4 for i in 1:Nc) / Nc
             #measure Binder cumulant
-            bc = 1 - (m4 / (m2 ^ 2 + 1e-10)) / 3
-            println("Binder cumulant: $bc")			
+            bc = 1 - (m4 / (m2 ^ 2 + 1e-10)) / 3			
             #the following is to check for convergence of rho to 1
             rho = M.rho_0 * ((M.kAd / M.kAa) + totA) / ((M.kBd / M.kBa) + totB)
-            push!(measures, Measure(ϕav, bc, s.cytoEA[], s.cytoEB[], rho))
+            push!(measures, Measure(t,ϕav, bc, s.cytoEA[], s.cytoEB[], rho))
 			if next % Nsave ==0
+				println("T = $(times[next]) and <ϕ>/c = $(ϕav)")
+				println("Binder cumulant: $bc")
 				save("$name/config_T=$(round(times[next],digits=3)).jld",compress=true, "state", s)
 				save("$name/measures.jld",compress=true, "measures", measures)
 			end
