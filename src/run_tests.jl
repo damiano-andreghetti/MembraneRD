@@ -71,11 +71,14 @@ function build_model_state(L)
 end
 
 T = 2000.0
+Tmeas=10.0
+Nsave=10
+fld_name="test"
 L = 100
 
 M,s = build_model_state(L)
 p = ProgressMeasurer(T)
-m = Measurer(M; times=0:1000:T)
+m = Measurer(M; times=0:Tmeas:T,name=fld_name, Nsave)
 stats = (s,t)->(p(s,t); m(s,t))
 
 @time run_RD!(s, M, T; stats = m) 
