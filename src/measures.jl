@@ -9,7 +9,7 @@ struct Measure
 end
 
 #make measures here
-function Measurer(M::Model; times)
+function Measurer(M::Model; times, name, Nsave)
     isempty(times) && return
 	measures = Measure[]
     Nc = length(M)
@@ -17,7 +17,7 @@ function Measurer(M::Model; times)
     function take_measure(t, s)
         #calculate phi at each cell (normalized, goes from -1, to 1)
         ϕ(i) = (s.nB[i] - s.nA[i])/(s.nA[i] + s.nB[i] + 1e-10)
-        while next <= lastindex(times) && times[next] <= t 
+        while times[next] <= t && next <= lastindex(times) 
             totA, totB = sum(s.nA), sum(s.nB)
             #measure phi
             ϕav = (totB - totA) / (totA + totB)
@@ -31,6 +31,10 @@ function Measurer(M::Model; times)
             #the following is to check for convergence of rho to 1
             rho = M.rho_0 * ((M.kAd / M.kAa) + totA) / ((M.kBd / M.kBa) + totB)
             push!(measures, Measure(ϕav, bc, s.cytoEA[], s.cytoEB[], rho))
+			if next % Nsave ==0
+				save("$name/config_T=$(round(times[next],digits=3)).jld",compress=true, "state", s)
+				save("$name/measures.jld",compress=true, "measures", measures)
+			end
             next += 1
         end
     end
