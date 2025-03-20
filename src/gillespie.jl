@@ -104,4 +104,5 @@ function run_RD!(s::State, M::Model, T;
             update(j)
         end
     end
+	stats(T, s)
 end
