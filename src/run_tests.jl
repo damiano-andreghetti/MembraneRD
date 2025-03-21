@@ -1,4 +1,4 @@
-using RD
+using MembraneRD
 
 function build_model_state(L)
     g,posx,posy = RD.gen_hex_lattice(L)
