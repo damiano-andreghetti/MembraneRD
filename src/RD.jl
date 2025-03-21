@@ -1,4 +1,4 @@
-module RD
+module MembraneRD
 
 using ExponentialQueues, ProgressMeter, Random
 
