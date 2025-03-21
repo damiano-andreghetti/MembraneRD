@@ -87,12 +87,13 @@ Tmeas = 10.0
 Nsave = 10
 L = 100
 
-#for riproducibility
-seed=22
+#for reproducibility
+seed = 22
 ran_ng = Random.Xoshiro(seed)
 M,s = build_model_state(L,rng=ran_ng)
 p = ProgressShower(T)
 m = Measurer(M; name="test", Nsave)
-stats = TimeFilter(m, p; times=Tmeas:Tmeas:T)
+pl = TimeFilter(Plotter(M); times=Tmeas:200:T)
+stats = TimeFilter(m, p, pl; times=Tmeas:Tmeas:T)
 
 @time run_RD!(s, M, T; stats, rng=ran_ng) 

@@ -17,4 +17,3 @@ struct Model{G}
 end
 
 Base.length(M::Model) = nv(M.g)
-
