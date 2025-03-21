@@ -1,6 +1,6 @@
 module MembraneRD
 
-using ExponentialQueues, ProgressMeter, Random
+using ExponentialQueues, ProgressMeter, Random, JLD
 
 export Model, run_RD!, Measurer, ProgressMeasurer, State, gen_hex_lattice, gen_rect_lattice
 
