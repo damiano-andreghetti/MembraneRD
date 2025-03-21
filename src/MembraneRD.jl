@@ -1,6 +1,6 @@
 module MembraneRD
 
-using ExponentialQueues, Random, JLD
+using ExponentialQueues, Random
 
 export Model, run_RD!, State, gen_hex_lattice, gen_rect_lattice
 
