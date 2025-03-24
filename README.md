@@ -1,3 +1,3 @@
-# RD
+# MembraneRD
 
 [![Build Status](https://github.com/abraunst/RD/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/abraunst/RD/actions/workflows/CI.yml?query=branch%3Amain)
