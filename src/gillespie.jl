@@ -1,16 +1,5 @@
-struct State{T}
-	nA::Vector{T}
-	nB::Vector{T}
-	nEA::Vector{T}
-	nEB::Vector{T}
-	cytoEA::Base.RefValue{T}
-	cytoEB::Base.RefValue{T}
-end
-
-Base.length(s::State) = length(s.nEA)
-
 function run_RD!(s::State, M::Model, T; 
-        stats = (x...)->nothing, 
+        stats = (_, _)->nothing, 
         rng = Random.default_rng())
 
     QA,QB,QEA,QEB,QcatA,QcatB = (ExponentialQueue(length(M)) for _ in 1:6)
