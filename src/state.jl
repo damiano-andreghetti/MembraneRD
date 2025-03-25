@@ -7,6 +7,7 @@ struct State{T}
 	cytoEB::Base.RefValue{T}
 end
 
+
 function State(M::Model, totA::Int, totB::Int, memEA::Int, memEB::Int, cytoEA::Int, cytoEB::Int; rng = Random.default_rng())
     N = length(M)
     nA, nB, nEA, nEB = fill(0,N), fill(0,N), fill(0,N), fill(0,N)
@@ -27,3 +28,4 @@ function State(M::Model, totA::Int, totB::Int, memEA::Int, memEB::Int, cytoEA::I
 end
 
 Base.length(s::State) = length(s.nEA)
+
