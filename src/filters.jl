@@ -23,7 +23,7 @@ end
 
 function plot(M::Model, s::State)
     L = floor(Int, sqrt(length(M)))
-    color = RGB.(s.nA ./ 30, s.nB ./ 30, 0)
+    color = RGB.(0.0, s.nB ./ 30, s.nA ./ 30)
     (x0,x1),(y0,y1) = extrema(M.posx), extrema(M.posy)
     compose(
         context(units=UnitBox(x0-2, y0-2, x1-x0+4, y1-y0+4)), 
