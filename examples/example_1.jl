@@ -92,7 +92,7 @@ seed = 22
 ran_ng = Random.Xoshiro(seed)
 M,s = build_model_state(L,rng=ran_ng)
 p = ProgressShower(T)
-m = Measurer(M; name="test", Nsave)
+m = Measurer(M; name="test_example_1", Nsave)
 pl = TimeFilter(Plotter(M); times=Tmeas:200:T)
 stats = TimeFilter(m, p, pl; times=Tmeas:Tmeas:T)
 
