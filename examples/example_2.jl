@@ -91,7 +91,7 @@ seed=22
 ran_ng = Random.Xoshiro(seed)
 M,s = build_model_state(L,rng=ran_ng)
 p = ProgressShower(T)
-m = Measurer(M; times=Tmeas:Tmeas:T,name="test", Nsave)
+m = Measurer(M; times=Tmeas:Tmeas:T,name="test_example_2", Nsave)
 
 @time run_RD!(s, M, T; stats=m, rng=ran_ng) 
 
