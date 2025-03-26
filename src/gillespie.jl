@@ -41,7 +41,8 @@ function run_RD!(s::State, M::Model, T;
     while !isempty(Q)
         (ev, i), dt = peek(Q; rng)
         t += dt
-        t > T && break
+        t > T && break #reached end time for simulation
+		((sum(QA.acc) ==0 && sum(QcatA.acc)==0)|| (sum(QB.acc)==0 && sum(QcatB.acc)==0)) && break #reached adsorbing tate
         stats(t, s)
         @inbounds if ev === :difA #diffusion of specie A
             j = rand_neighbor(i)
