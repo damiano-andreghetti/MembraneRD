@@ -43,7 +43,7 @@ end
     T = 2000.0
     L = 100
     rng = Random.Xoshiro(22)
-    M,s = build_model_state(L, rng)
+    M,s = build_model_state(L; rng)
     run_RD!(s, M, T; rng)
     @test sum(s.nA) == 37337
     @test sum(s.nB) == 62663
