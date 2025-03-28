@@ -1,4 +1,4 @@
-using MembraneRD, Test, Random
+using MembraneRD, Test, StableRNGs
 
 function build_model_state(L; rng = Random.default_rng())
     g,posx,posy = MembraneRD.gen_hex_lattice(L)
@@ -42,10 +42,10 @@ end
 @testset "reproducibility" begin
     T = 2000.0
     L = 100
-    rng = Random.Xoshiro(22)
-    M,s = build_model_state(L, rng)
+    rng = StableRNG(22)
+    M,s = build_model_state(L; rng)
     run_RD!(s, M, T; rng)
-    @test sum(s.nA) == 37337
-    @test sum(s.nB) == 62663
-end 
+    @test sum(s.nA) == 37442
+    @test sum(s.nB) == 62558
+end
 
