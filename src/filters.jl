@@ -22,13 +22,10 @@ function hexagon(x, y, r)
 end
 
 function plot(M::Model, s::State)
-    L = floor(Int, sqrt(length(M)))
-    color = RGB.(0.0, s.nB ./ 30, s.nA ./ 30)
-    (x0,x1),(y0,y1) = extrema(M.posx), extrema(M.posy)
-    compose(
-        context(units=UnitBox(x0-2, y0-2, x1-x0+4, y1-y0+4)), 
-        hexagon(M.posx, M.posy, 1),
-        fill(color))
+    posx, posy = mm .* M.posx, mm .* M.posy
+    (x0,x1),(y0,y1) = extrema(posx), extrema(posy)
+    set_default_graphic_size(x1-x0+3mm, y1-y0+3mm)
+    compose(context(), hexagon(posx, posy, 1mm), fill(RGB.(0.0, s.nB ./ 30, s.nA ./ 30))    )
 end
 
 function Plotter(M::Model)
