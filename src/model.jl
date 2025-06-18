@@ -12,6 +12,8 @@ struct Model{G}
     kAd::Float64
     kBa::Float64
     kBd::Float64
+	kAs::Float64
+	kBs::Float64
     KMM::Float64
     rho_0::Float64
 end

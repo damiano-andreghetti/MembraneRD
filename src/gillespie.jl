@@ -32,7 +32,9 @@ function run_RD!(s::State, M::Model, T;
             :difEA => QEA * M.dEA,
             :difEB => QEB * M.dEB,
             :detEA => QEA * M.kAd,
-            :detEB => QEB * M.kBd
+            :detEB => QEB * M.kBd,
+			:spontB => QA * M.kBs,
+			:spontA => QB * M.kAs,
         )
 
     println("starting simulation, $(length(Q)) events in the queue")
@@ -42,7 +44,7 @@ function run_RD!(s::State, M::Model, T;
         (ev, i), dt = peek(Q; rng)
         t += dt
         t > T && break #reached end time for simulation
-		((sum(QA.acc) ==0 && sum(QcatA.acc)==0)|| (sum(QB.acc)==0 && sum(QcatB.acc)==0)) && break #reached adsorbing tate
+		((sum(QA.acc) ==0 && sum(QcatA.acc)==0 && M.kAs==0)|| (sum(QB.acc)==0 && sum(QcatB.acc)==0 && M.kBs==0)) && break #reached adsorbing tate 
         stats(t, s)
         @inbounds if ev === :difA #diffusion of specie A
             j = rand_neighbor(i)
@@ -96,6 +98,14 @@ function run_RD!(s::State, M::Model, T;
             s.nEB[j] += 1
             update(i)
             update(j)
+		elseif ev == :spontA #spontaneous interconversion B->A
+			s.nA[i]+=1
+			s.nB[i]-=1
+			update(i)
+		elseif ev == :spontB #spontaneous interconversion A->B
+			s.nB[i]+=1
+			s.nA[i]-=1
+			update(i)
         end
     end
 	stats(T, s)

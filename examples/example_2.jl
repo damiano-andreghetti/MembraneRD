@@ -68,8 +68,9 @@ function build_model_state(L; rng = Random.default_rng())
     kBa = kBa_th/V
     kBd = kBd_th
     KMM = KMM_th*Ac
-
-    M = Model(g, posx, posy, dA, dB, dEA, dEB, kAc, kBc, kAa, kAd, kBa, kBd, KMM, 0.0)
+	kAs=0.0
+	kBs=0.0
+    M = Model(g, posx, posy, dA, dB, dEA, dEB, kAc, kBc, kAa, kAd, kBa, kBd,kAs,kBs, KMM, 0.0)
 
     totmol = N * 10
     totA, totB = floor(Int, totmol / 2), floor(Int, totmol / 2)
