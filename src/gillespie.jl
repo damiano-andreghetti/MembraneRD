@@ -214,5 +214,5 @@ function run_RDcr!(s::State, M::Model, T;
 			update(i)
         end
     end
-	stats(T, s, ev, i)
+	stats(T, s, :finish, 1)
 end
