@@ -2,7 +2,7 @@ module MembraneRD
 
 using ExponentialQueues, Random, ProgressMeter, Colors, Compose
 
-export Model, State, run_RD!, gen_hex_lattice, gen_rect_lattice,
+export Model, State, run_RD!, run_RDcr!, gen_hex_lattice, gen_rect_lattice,
     ProgressShower, TimeFilter, Plotter
 
 include("lattice.jl")
